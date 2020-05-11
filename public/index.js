@@ -125,16 +125,44 @@ function addMinionFromForm() {
 }
 
 function shareConfiguration() {
-    let json = JSON.stringify(SLOT_REGISTER);
+    let json = '[' + Object.values(SLOT_REGISTER).map(v => v === null ? "{}" : v.toShareableJSONString()).join(",") + ']';
     let data = btoa(json);
 
     let shareArea = document.getElementById('shareArea');
-    let url = `https://skyblock-minion-calculator.herokuapp.com/config/${data}`;
+    let url = `https://skyblock-minion-calculator.herokuapp.com/?config=${data}`;
     shareArea.innerHTML = `<a href="${url}">${url}</a>`;
 
 }
 
 window.onload = () => {
-    for (let i = 1; i <= MAX_MINION_SLOTS; i++)
-        MinionSlot.fromLocalStorage(i);
+    let params = new URLSearchParams(window.location.search);
+    let config = params.get('config');
+
+    if (config) {
+        let json = atob(config);
+        console.log(json);
+        let register = JSON.parse(json);
+        console.log(register);
+        for (let i = 0; i < MAX_MINION_SLOTS; i++) {
+            if (!(Object.keys(register[i]).length === 0 && register[i].constructor === Object)) {
+                let obj = new MinionSlot(undefined, undefined, undefined, undefined, undefined, undefined, undefined, i);
+                obj.name = register[i].name;
+                obj.level = register[i].level;
+                obj.fuel = register[i].fuel;
+                obj.upgrade1 = register[i].upgrade1;
+                obj.upgrade2 = register[i].upgrade2;
+                obj.additionalBonusPercentage = register[i].additionalBonusPercentage;
+                obj.occupied = register[i].occupied;
+                obj.sellPreference = register[i].sellPreference;
+                console.log(obj);
+                obj.updatePrices();
+                obj.render();
+                SLOT_REGISTER[i] = obj;
+                MinionSlot.incrementMinionCount();
+            }
+        }
+    } else {
+        for (let i = 1; i <= MAX_MINION_SLOTS; i++)
+            MinionSlot.fromLocalStorage(i);
+    }
 };

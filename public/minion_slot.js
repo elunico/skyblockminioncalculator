@@ -65,8 +65,8 @@ class MinionSlot {
     //static totalSlots = 0;
     //static minionSlotContainer = null;
 
-    constructor(name, level, fuel, upgrade1, upgrade2, additionalBonusPercentage, sellPreference) {
-        this.id = MinionSlot.getNextSlot();
+    constructor(name, level, fuel, upgrade1, upgrade2, additionalBonusPercentage, sellPreference, id) {
+        this.id = (id === undefined) ? MinionSlot.getNextSlot() : id;
         this.name = name;
         this.level = level;
         this.fuel = fuel;
@@ -351,6 +351,18 @@ class MinionSlot {
         data[`sl${this.id}-additional-bonus`] = this.additionalBonusPercentage;
         data[`sl${this.id}-sell-to`] = this.sellPreference;
         return data;
+    }
+
+    toShareableJSONString() {
+        const data = {};
+        data.name = this.name;
+        data.level = this.level;
+        data.fuel = this.fuel;
+        data.upgrade1 = this.upgrade1;
+        data.upgrade2 = this.upgrade2;
+        data.additionalBonusPercentage = this.additionalBonusPercentage;
+        data.sellPreference = this.sellPreference;
+        return JSON.stringify(data);
     }
 }
 
