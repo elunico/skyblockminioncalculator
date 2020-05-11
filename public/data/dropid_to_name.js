@@ -54,5 +54,6 @@ const DROPID_TO_NAME = {
     "SUGAR_CANE": "Sugar Cane",
     "WHEAT": "Wheat",
     "SEEDS": "Seeds",
-    "ROTTEN_FLESH": "Rotten Flesh"
+    "ROTTEN_FLESH": "Rotten Flesh",
+    "EGG": "Egg"
 }

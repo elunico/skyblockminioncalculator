@@ -53,6 +53,14 @@ function getItemDrops(minionSlot, seconds) {
         }
     }
 
+    if (minionSlot.upgrade1 == 'enchantedegg' || minionSlot.upgrade2 == 'enchantedegg') {
+        if (minionSlot.name != 'Chicken') {
+            showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name}. It will be ignored`);
+        } else {
+            drops['EGG'] = drops["CHICKEN"];
+        }
+    }
+
     return drops;
 }
 
