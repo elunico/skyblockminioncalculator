@@ -57,7 +57,7 @@ function getItemDrops(minionSlot, seconds) {
         if (minionSlot.name != 'Chicken') {
             showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name}. It will be ignored`);
         } else {
-            drops['EGG'] = drops["CHICKEN"];
+            drops['EGG'] = drops["RAW_CHICKEN"];
         }
     }
 
