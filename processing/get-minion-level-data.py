@@ -10,11 +10,12 @@ def js_to_json_string(f):
     return text.replace('"', '\\"').replace('\'', '"').replace('`', '"')
 
 
-with open('../data/minion_types.js') as f:
-    text = ''.join(i for i in f.readlines()[
-                   1:] if not i.strip().startswith('//'))
+# with open('../data/minion_types.js') as f:
+#     text = ''.join(i for i in f.readlines()[
+#                    1:] if not i.strip().startswith('//'))
 
-all_minions = json.loads(text)
+# all_minions = json.loads(text)
+all_minions = {'Revenant': 0, 'Tarantula': 0}
 
 url = 'https://hypixel-skyblock.fandom.com/wiki/{}_Minion'
 
@@ -51,5 +52,5 @@ for minion in all_minions.keys():
             level += 1
 
 
-with open('minion-levels.json', 'w') as f:
+with open('minion-levels-slayer.json', 'w') as f:
     json.dump(minions, f, indent=2)

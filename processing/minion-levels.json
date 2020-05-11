@@ -1,4 +1,96 @@
 {
+  "Revenant": {
+    "1": {
+      "cooldown": 29,
+      "slots": 64
+    },
+    "2": {
+      "cooldown": 29,
+      "slots": 192
+    },
+    "3": {
+      "cooldown": 26,
+      "slots": 192
+    },
+    "4": {
+      "cooldown": 26,
+      "slots": 384
+    },
+    "5": {
+      "cooldown": 23,
+      "slots": 384
+    },
+    "6": {
+      "cooldown": 23,
+      "slots": 576
+    },
+    "7": {
+      "cooldown": 19,
+      "slots": 576
+    },
+    "8": {
+      "cooldown": 19,
+      "slots": 768
+    },
+    "9": {
+      "cooldown": 14,
+      "slots": 768
+    },
+    "10": {
+      "cooldown": 14,
+      "slots": 960
+    },
+    "11": {
+      "cooldown": 10,
+      "slots": 960
+    }
+  },
+  "Tarantula": {
+    "1": {
+      "cooldown": 29,
+      "slots": 64
+    },
+    "2": {
+      "cooldown": 29,
+      "slots": 192
+    },
+    "3": {
+      "cooldown": 26,
+      "slots": 192
+    },
+    "4": {
+      "cooldown": 26,
+      "slots": 384
+    },
+    "5": {
+      "cooldown": 23,
+      "slots": 384
+    },
+    "6": {
+      "cooldown": 23,
+      "slots": 576
+    },
+    "7": {
+      "cooldown": 19,
+      "slots": 576
+    },
+    "8": {
+      "cooldown": 19,
+      "slots": 768
+    },
+    "9": {
+      "cooldown": 14,
+      "slots": 768
+    },
+    "10": {
+      "cooldown": 14,
+      "slots": 960
+    },
+    "11": {
+      "cooldown": 10,
+      "slots": 960
+    }
+  },
   "Blaze": {
     "1": {
       "cooldown": 33,

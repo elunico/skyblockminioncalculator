@@ -1,6 +1,8 @@
 const ca9 = () => xb1;
 const MINIONS =
 {
+    "Tarantula": { "count": 1, "drops": [{ "chance": 1, "id": "SPIDER_EYE" }, { "chance": 3.5, "id": "STRING" }, { "chance": 0.2, "id": "IRON_INGOT" }] },
+    "Revenant": { "count": 1, "drops": [{ "chance": 1, "id": "ROTTEN_FLESH" }, { "chance": 0.1, "id": "DIAMOND" }] },
     "Blaze": { "count": 1, "drops": [{ "chance": 1, "id": "BLAZE_ROD" }] },
     "Cactus": { "count": 1, "drops": [{ "chance": 1, "id": "CACTUS" }] },
     "Carrot": { "count": 3, "drops": [{ "chance": 1, "id": "CARROT_ITEM" }] },
