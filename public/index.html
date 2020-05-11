@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hypixel Skyblock Minion Money Calculator</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link href="index.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <script src="data/dropid_to_name.js"></script>
+    <script src="dropdown.js"></script>
+    <script src="minion_slot.js"></script>
+    <h1>
+        Hypixel Skyblock Minion Money Calculator
+    </h1>
+
+    <body>
+        <p>
+            Use this tool to calculate the money you can make from various minion configurations.
+        </p>
+        <p> Start by adding a minion using the form below. </p>
+        <p id='hidden-notes-msg' class="note">...FAQs &amp; Notes are hidden...</p>
+        <span hidden id="notes" class="note">
+            <h3>FAQs &amp; Notes</h3>
+            <div class="indent-notes">
+                <p>
+                    Note 1: this assumes you have enough fuel for however long
+                    you want to know the coins for. In other words, if you say fuel=Foul Flesh the Earnings Per Week
+                    calculation will assume you have a weeks worth or (24/5) * 7 = 34 foul flesh to put into the
+                    minion
+                </p>
+                <p>
+                    Note 2: This program takes into account the chance of items dropping and the number of drops per
+                    minion. For example: a spider minion has a 100% chance to drop string and a 50% chance to drop
+                    a spider eye. At level 9 it has an action interval of 17s. This means it gets drops every 34 seconds
+                    since one action spawns a cave spider and then one action is used to kill it obtaining the drops.
+                    This means after 1 hour or 3600 seconds, 3600 / 17 actions have occured, half of which resulted in
+                    drops.
+                    Since there are 2 drops with different chances we know ((3600 / 17) / 2) * 1.0 or all the drops
+                    resulted
+                    in
+                    a spider eye and ((3600 / 17) / 2) * 0.5 or half the drops ALSO resulted in string. Therefore,
+                    this program calculates the money made from both. This data is taken from the wiki on fandom.com
+                </p>
+                <p>
+                    Note 3: The prices for the bazaar are updated every 15 minutes from the actual Hypixel API
+                    meaning they are always current. NPC sell prices, minion drop items, minion drop chance,
+                    action interval, and all other stats that are not bazaar prices cannot be fetched live
+                    and were taken from <a href="https://hypixel-skyblock.fandom.com/">this Wiki</a>
+                    and are static until updated.
+                    <br>
+                    <br>
+                    <b><i>Last Updated: Monday, May 11, 2020 at 12:23PM EDT</i></b>
+                </p>
+                <p>
+                    Note 4: Currently upgrades are ignored in the calculation. This will be changed soon.
+                </p>
+                <p>
+                    Note 5: If you click "edit minion" the minion will be removed and the form will be changed to the
+                    values
+                    of that minion. This streamlines the process of changing minions but it will overwrite anything in
+                    the
+                    "Add Minion" section and will change the order of the minions. The edit button is a simple
+                    convenience
+                    and is equivalent to deleting and readding a minion with the added benefit that the form is
+                    automatically filled out with the stats of the minion that gets removed, so you can change them
+                    easily.
+                </p>
+            </div>
+        </span>
+        <p>
+            <input onclick="switchScheme()" type="button" value="Turn Dark Mode Off" id='color-scheme-button'>
+            <input onclick="switchFont()" type="button" value="Minecraft Font" id='font-button'>
+            <input onclick="showNotes()" type="button" value="Show FAQs & Notes" id='hide-notes-button'>
+            <input onclick="shareConfiguration()" type="button" value="Share this Configuration" id='share-button'>
+            <div id="shareArea"></div>
+            <script>
+                let hidden = true;
+
+                function showNotes() {
+                    const btn = document.getElementById('hide-notes-button');
+                    const msg = document.getElementById('hidden-notes-msg');
+                    const notes = document.getElementById('notes');
+                    if (hidden) {
+                        btn.value = 'Hide Notes';
+                        notes.removeAttribute('hidden');
+                        hidden = false;
+                        msg.setAttribute('hidden', true);
+                    } else {
+                        btn.value = "Show Notes";
+                        notes.setAttribute('hidden', true);
+                        hidden = true;
+                        msg.removeAttribute('hidden');
+                    }
+                }
+            </script>
+        </p>
+        <div><b>Add a new minion:</b></div>
+        <div id="minion-form" class="modal-form">
+            <span style="width: 254px; display: inline-block;" class="small">Base stats of minion:</span>
+            <span class="small">Upgrades, Fuels, and Bonuses (from pets, crystals, etc.)</span>
+            <br>
+            <select style="width: 254px;" id="type-select">
+                <option value="EMPTY">-- Select the type of minion --</option>
+            </select>
+            <script src="data/minion_level_stats.js"></script>
+            <script src="data/minion_types.js"></script>
+            <script src="data/npc_prices.js"></script>
+            <script src="data/sc3000_map.js"></script>
+            <script src="build-type-select.js">
+            </script>
+            <select style="width: 254px;" id="fuel">
+                <option value="none">No Fuel (see Note 1)</option>
+                <option value="coal">Coal</option>
+                <option value="ebread">Enchanted Bread</option>
+                <option value="ecoal">Enchanted Coal</option>
+                <option value="echarcoal">Enchanted Charcoal</option>
+                <option value="foulflesh">Foul Flesh</option>
+                <option value="hamsterwheel">Hamster Wheel</option>
+                <option value="catalyst">Catalyst</option>
+                <option value="elava">Enchanted Lava Bucket</option>
+            </select>
+            <br>
+            <select style="width: 254px;" id="level-select">
+                <option value="none">-- Select Minion Level --</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+            </select>
+            <select style="width: 254px;" id="upgrade1">
+                <option value="none">No Upgrade 1</option>
+                <option value="flycatcher">Flycatcher</option>
+                <option value="diamondspreading">Diamond Spreading</option>
+                <option value="minionexpander">Minion Expander</option>
+                <option value="compactor">Compactor</option>
+                <option value="sc3000">Super Compactor 3000</option>
+                <option value="enchantedegg">Enchanted Egg</option>
+                <option value="flintshovel">Flint Shovel</option>
+            </select>
+            <br>
+            <select style="width: 254px;" id="sell-place-preference">
+                <option value='bestprice'>Sell for best price (NPC or Bazaar)</option>
+                <option value='npc'>Sell To NPC only</option>
+                <option value='bazaar'>Sell to Bazaar only</option>
+            </select>
+            <select style="width: 254px;" id="upgrade2">
+                <option value="none">No Upgrade 2</option>
+                <option value="flycatcher">Flycatcher</option>
+                <option value="diamondspreading">Diamond Spreading</option>
+                <option value="minionexpander">Minion Expander</option>
+                <option value="compactor">Compactor</option>
+                <option value="sc3000">Super Compactor 3000</option>
+                <option value="enchantedegg">Enchanted Egg</option>
+                <option value="flintshovel">Flint Shovel</option>
+            </select>
+            <br>
+
+            <input style="width: 250px;" type="number" placeholder="Additional Speed % Bonus (optional)"
+                id='additional-bonus' />
+
+        </div>
+        <p>
+            <input id="add-minion-button" type="button" value="Add minion">
+            <input id="add-24-minion-button" type="button" value="Add minion 24 times">
+            <input id="remove-all-minion-button" type="button" value="Remove ALL minions">
+        </p>
+        <p id="add-status" class="status">&nbsp;</p>
+
+        <p>
+            <div><b>Coin Totals from All Minion</b></div>
+            <div class="coin-total"> Total coins per hour:
+                <span class="minion-stat" id="coin-total-hour"></span>
+            </div>
+            <div class="coin-total"> Total coins per day:
+                <span class="minion-stat" id="coin-total-day"></span>
+            </div>
+            <div class="coin-total"> Total coins per week:
+                <span class="minion-stat" id="coin-total-week"></span>
+            </div>
+        </p>
+
+        <div><b>Stats per minion:</b></div>
+        <p id="minion-container">
+            <p><span id="slot-count">0</span> Minion Slots Occupied</p>
+            <span id="slots">
+            </span>
+            <script>
+                const slots = document.getElementById('slots');
+                MinionSlot.setParentContainer(slots);
+            </script>
+        </p>
+        <p class="ack">
+            The Bitmap font used on this website is provided by
+            <a target="_blank" rel="noreferrer noopener" href="https://www.fontspace.com/jdgraphics">JDGrpahics</a> and
+            is downloaded from
+            <a target="_blank" rel="noreferrer noopener" href="https://www.fontspace.com/minecraft-font-f28180">this
+                website</a>
+            Many thanks for making it available for embedding on sites.
+        </p>
+    </body>
+
+
+    <script src="index.js">
+
+    </script>
+</body>
+
+</html>
