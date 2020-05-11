@@ -147,7 +147,7 @@ function minionTypeToPrices(drops, preference, options) {
     }
 
     if (options != {}) {
-        showStatus("Options is not currently implemented. Things like sc3000, enchantedegg, and flintshovel will not affect the output")
+        // showStatus("Options is not currently implemented. Things like sc3000, enchantedegg, and flintshovel will not affect the output")
     }
 
     switch (preference) {

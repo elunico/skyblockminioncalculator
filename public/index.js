@@ -113,7 +113,7 @@ function addMinionFromForm() {
     let additionalBonusPercentage = document.getElementById('additional-bonus').value || 0;
     let sellPref = sellToDropdown.getSelectedItem();
     additionalBonusPercentage /= 100; // divide extra percentage to get fractional value
-    if (!(name == 'none' && level == 'none')) {
+    if (name == 'none' && level == 'none') {
         showStatus("You must specify a minion type and a level.");
         return;
     } else {
