@@ -10,8 +10,8 @@ if (environment != 'production') {
 
 
 const limiter = rateLimit({
-    windowMs: 1000 * 60 * 5,
-    max: 50
+    windowMs: 1000 * 60,
+    max: 250
 })
 
 app.use((req, res, next) => {
