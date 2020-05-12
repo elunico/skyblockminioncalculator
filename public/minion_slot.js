@@ -77,13 +77,17 @@ class MinionSlot {
 
         this.occupied = true;
         this._htmlExists = false;
-        this.pricesPerItem = name && sellPreference && minionTypeToPrices(getHourlyItemDrops(this), sellPreference, {});
+        if (name && sellPreference) {
+            this.updatePrices();
+        } else {
+            this.pricesPerItem = null;
+        }
 
         SLOT_REGISTER[this.id] = this;
     }
 
     updatePrices() {
-        this.pricesPerItem = minionTypeToPrices(getHourlyItemDrops(this), this.sellPreference, {});
+        this.pricesPerItem = getDropItemPrices(Object.keys(getHourlyMinionDropCounts(this)), this.sellPreference);
     }
 
     static isFull() {
@@ -303,8 +307,8 @@ class MinionSlot {
     }
 
     calculateHourlyCoins() {
-        let drops = getHourlyItemDrops(this);
-        return totalPriceForDrops(drops, this.sellPreference);
+        let drops = getHourlyMinionDropCounts(this);
+        return getTotalDropsValue(drops, this.sellPreference);
     }
 
     itemsToString(prices) {
