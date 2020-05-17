@@ -14,6 +14,10 @@
 </head>
 
 <body>
+    <script src="data/minion_level_stats.js"></script>
+    <script src="data/minion_types.js"></script>
+    <script src="data/npc_prices.js"></script>
+    <script src="data/sc3000_map.js"></script>
     <script src="data/dropid_to_name.js"></script>
     <script src="dropdown.js"></script>
     <script src="minion_slot.js"></script>
@@ -108,13 +112,17 @@
             <select style="width: 254px;" id="type-select">
                 <option value="none">-- Select the type of minion --</option>
             </select>
-            <script src="data/minion_level_stats.js"></script>
-            <script src="data/minion_types.js"></script>
-            <script src="data/npc_prices.js"></script>
-            <script src="data/sc3000_map.js"></script>
-            <script src="utils.js"></script>
-            <script src="build-type-select.js">
+            <script>
+                let select = document.getElementById('type-select');
+
+                for (let name of Object.keys(MINIONS)) {
+                    let option = document.createElement('option');
+                    option.value = name;
+                    option.innerHTML = name;
+                    select.appendChild(option);
+                }
             </script>
+
             <select style="width: 254px;" id="fuel">
                 <option value="none">No Fuel (see Note 1)</option>
                 <option value="coal">Coal</option>
@@ -194,11 +202,13 @@
         <p><span id="slot-count">0</span> Minion Slots Occupied</p>
         <span id="slots">
         </span>
+        </p>
         <script>
             const slots = document.getElementById('slots');
             MinionSlot.setParentContainer(slots);
         </script>
-        </p>
+        <script src="utils.js"></script>
+        <script src="prices.js"></script>
         <p class="ack">
             The Bitmap font used on this website is provided by
             <a target="_blank" rel="noreferrer noopener" href="https://www.fontspace.com/jdgraphics">JDGrpahics</a> and

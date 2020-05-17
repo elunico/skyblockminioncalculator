@@ -3,18 +3,17 @@
 // minion_level_stats.js, minion_types.js, npc_prices.js, dropid_to_name.js
 // sc3000_map.js
 
-let select = document.getElementById('type-select');
-
-for (let name of Object.keys(MINIONS)) {
-    let option = document.createElement('option');
-    option.value = name;
-    option.innerHTML = name;
-    select.appendChild(option);
+const SELL_PREFERENCE = {
+    NPC: 'npc',
+    BAZAAR: 'bazaar',
+    BEST_PRICE: 'bestprice'
 }
+
 
 let BAZAAR_PRICES = {};
 
-
+// retrieve bazaar prices locally or from server
+// then show the add minion form when prices are ready 
 (async function () {
     let form = document.getElementById('minion-form');
     let loading = document.getElementById('form-loading');
@@ -41,6 +40,7 @@ let BAZAAR_PRICES = {};
     console.log("Fetched Bazaar prices. Caching prices.");
     setCookie('hypixel-fetched', 'true', { 'max-age': 15 * 60 });
     localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
+
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
     for (let i = 1; i <= MAX_MINION_SLOTS; i++)
@@ -52,6 +52,13 @@ function getHourlyMinionDropCounts(minionSlot) {
     return getMinionDropCounts(minionSlot, 60 * 60);
 }
 
+/**
+ * Calculates the number of each type of drop the minion in the 
+ * MinionSlot will drop over seconds seconds
+ * @returns {object} Item IDs of the minion's drops to the amount dropped
+ * @param {MinionSlot} minionSlot The minion slot whose drops we want to know
+ * @param {number} seconds the interval over which to calculate number of drops
+ */
 function getMinionDropCounts(minionSlot, seconds) {
     let actionInterval = MINION_LEVEL_STATS[minionSlot.name][minionSlot.level].cooldown;
     let speed = calculateNewSpeed(actionInterval, minionSlot.fuel, minionSlot.upgrade1, minionSlot.upgrade2, minionSlot.additionalBonusPercentage);
@@ -99,6 +106,13 @@ function getMinionDropCounts(minionSlot, seconds) {
     return drops;
 }
 
+/**
+ * returns a sum of the amount earned by selling the given number (value) 
+ * of each item ID (key) in dropCounts at the place preferred by the place argument 
+ * 
+ * @param {object} dropCounts an object listing the number of drops for each Item ID (can be obtained from getTotalMinionDropsCount)
+ * @param {string} place preferred place to sell drops
+ */
 function getTotalDropsValue(dropCounts, place) {
     let sum = 0;
     for (let id of Object.keys(dropCounts)) {
@@ -107,13 +121,13 @@ function getTotalDropsValue(dropCounts, place) {
     return sum;
 }
 
-const SELL_PREFERENCE = {
-    NPC: 'npc',
-    BAZAAR: 'bazaar',
-    BEST_PRICE: 'bestprice'
-}
 
 /**
+ * Returns a object containing item IDs to their 
+ * unit prices from the place according to preference.
+ * 
+ * Essentially, given a list of items, it iterates
+ * getItemPrice on them
  * 
  * @param {*} drops A list of item ids that the minion drops 
  * @param {*} preference The preference for where to sell items. See the SELL_PREFERENCE object for legal options
