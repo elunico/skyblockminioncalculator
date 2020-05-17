@@ -26,6 +26,8 @@ let BAZAAR_PRICES = {};
         BAZAAR_PRICES = JSON.parse(data);
         loading.setAttribute('hidden', true);
         form.removeAttribute('hidden');
+        for (let i = 1; i <= MAX_MINION_SLOTS; i++)
+            MinionSlot.fromLocalStorage(i);
         return;
     }
 
@@ -41,6 +43,8 @@ let BAZAAR_PRICES = {};
     localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
+    for (let i = 1; i <= MAX_MINION_SLOTS; i++)
+        MinionSlot.fromLocalStorage(i);
 })();
 
 

@@ -162,7 +162,10 @@ window.onload = () => {
             }
         }
     } else {
-        for (let i = 1; i <= MAX_MINION_SLOTS; i++)
-            MinionSlot.fromLocalStorage(i);
+        // this should trigger when Bazaar prices are loaded
+        // otherwise all prices will be from the NPC since 
+        // bazaar prices will be undefined
+        // for (let i = 1; i <= MAX_MINION_SLOTS; i++)
+        //     MinionSlot.fromLocalStorage(i);
     }
 };
