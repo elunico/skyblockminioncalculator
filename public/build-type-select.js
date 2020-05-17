@@ -16,12 +16,16 @@ let BAZAAR_PRICES = {};
 
 
 (async function () {
+    let form = document.getElementById('minion-form');
+    let loading = document.getElementById('form-loading');
 
     // caching 
     if (getCookie('hypixel-fetched') == 'true') {
         console.log('Bazaar prices from cache');
         let data = localStorage.getItem('hypixel-bazaar-data');
         BAZAAR_PRICES = JSON.parse(data);
+        loading.setAttribute('hidden', true);
+        form.removeAttribute('hidden');
         return;
     }
 
@@ -33,9 +37,10 @@ let BAZAAR_PRICES = {};
         BAZAAR_PRICES[obj.id] = obj.sell_price;
     }
     console.log("Fetched Bazaar prices. Caching prices.");
-    setCookie('hypixel-fetched', 'true', 15);
+    setCookie('hypixel-fetched', 'true', { 'max-age': 15 * 60 });
     localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
-
+    loading.setAttribute('hidden', true);
+    form.removeAttribute('hidden');
 })();
 
 

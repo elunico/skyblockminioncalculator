@@ -77,30 +77,31 @@
             <input onclick="switchFont()" type="button" value="Minecraft Font" id='font-button'>
             <input onclick="showNotes()" type="button" value="Show FAQs & Notes" id='hide-notes-button'>
             <input onclick="shareConfiguration()" type="button" value="Share this Configuration" id='share-button'>
-            <div id="shareArea"></div>
-            <script>
-                let hidden = true;
+        <div id="shareArea"></div>
+        <script>
+            let hidden = true;
 
-                function showNotes() {
-                    const btn = document.getElementById('hide-notes-button');
-                    const msg = document.getElementById('hidden-notes-msg');
-                    const notes = document.getElementById('notes');
-                    if (hidden) {
-                        btn.value = 'Hide Notes';
-                        notes.removeAttribute('hidden');
-                        hidden = false;
-                        msg.setAttribute('hidden', true);
-                    } else {
-                        btn.value = "Show Notes";
-                        notes.setAttribute('hidden', true);
-                        hidden = true;
-                        msg.removeAttribute('hidden');
-                    }
+            function showNotes() {
+                const btn = document.getElementById('hide-notes-button');
+                const msg = document.getElementById('hidden-notes-msg');
+                const notes = document.getElementById('notes');
+                if (hidden) {
+                    btn.value = 'Hide Notes';
+                    notes.removeAttribute('hidden');
+                    hidden = false;
+                    msg.setAttribute('hidden', true);
+                } else {
+                    btn.value = "Show Notes";
+                    notes.setAttribute('hidden', true);
+                    hidden = true;
+                    msg.removeAttribute('hidden');
                 }
-            </script>
+            }
+        </script>
         </p>
         <div><b>Add a new minion:</b></div>
-        <div id="minion-form" class="modal-form">
+        <h2 id="form-loading">Loading....</h2>
+        <div hidden id="minion-form" class="modal-form">
             <span style="width: 254px; display: inline-block;" class="small">Base stats of minion:</span>
             <span class="small">Upgrades, Fuels, and Bonuses (from pets, crystals, etc.)</span>
             <br>
@@ -176,27 +177,27 @@
         <p id="add-status" class="status">&nbsp;</p>
 
         <p>
-            <div><b>Coin Totals from All Minion</b></div>
-            <div class="coin-total"> Total coins per hour:
-                <span class="minion-stat" id="coin-total-hour"></span>
-            </div>
-            <div class="coin-total"> Total coins per day:
-                <span class="minion-stat" id="coin-total-day"></span>
-            </div>
-            <div class="coin-total"> Total coins per week:
-                <span class="minion-stat" id="coin-total-week"></span>
-            </div>
+        <div><b>Coin Totals from All Minion</b></div>
+        <div class="coin-total"> Total coins per hour:
+            <span class="minion-stat" id="coin-total-hour"></span>
+        </div>
+        <div class="coin-total"> Total coins per day:
+            <span class="minion-stat" id="coin-total-day"></span>
+        </div>
+        <div class="coin-total"> Total coins per week:
+            <span class="minion-stat" id="coin-total-week"></span>
+        </div>
         </p>
 
         <div><b>Stats per minion:</b></div>
         <p id="minion-container">
-            <p><span id="slot-count">0</span> Minion Slots Occupied</p>
-            <span id="slots">
-            </span>
-            <script>
-                const slots = document.getElementById('slots');
-                MinionSlot.setParentContainer(slots);
-            </script>
+        <p><span id="slot-count">0</span> Minion Slots Occupied</p>
+        <span id="slots">
+        </span>
+        <script>
+            const slots = document.getElementById('slots');
+            MinionSlot.setParentContainer(slots);
+        </script>
         </p>
         <p class="ack">
             The Bitmap font used on this website is provided by
