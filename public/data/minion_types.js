@@ -33,7 +33,7 @@ const MINIONS =
     "Oak": { "count": 1, "drops": [{ "chance": 1, "id": "LOG" }] },
     "Obsidian": { "count": 1, "drops": [{ "chance": 1, "id": "OBSIDIAN" }] },
     "Pig": { "count": 1, "drops": [{ "chance": 1, "id": "PORK" }] },
-    "Potato": { "count": 3, "drops": [{ "chance": 1, "id": "POTATO ITEM" }] },
+    "Potato": { "count": 3, "drops": [{ "chance": 1, "id": "POTATO_ITEM" }] },
     "Pumpkin": { "count": 1, "drops": [{ "chance": 1, "id": "PUMPKIN" }] },
     "Quartz": { "count": 1, "drops": [{ "chance": 1, "id": "QUARTZ" }] },
     "Rabbit": { "count": 1, "drops": [{ "chance": 1, "id": "RABBIT_FOOT" }] },

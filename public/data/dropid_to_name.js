@@ -39,7 +39,7 @@ const DROPID_TO_NAME = {
     "LOG": "Oak Log",
     "OBSIDIAN": "Obsidian",
     "PORK": "Pork",
-    "POTATO": "Potato",
+    "POTATO_ITEM": "Potato",
     "PUMPKIN": "Pumpkin",
     "QUARTZ": "Quartz",
     "RABBIT_FOOT": "Rabbit's Foot",
