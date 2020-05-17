@@ -18,28 +18,23 @@ let BAZAAR_PRICES = {};
     let form = document.getElementById('minion-form');
     let loading = document.getElementById('form-loading');
 
-    // caching 
+    // local caching check
     if (getCookie('hypixel-fetched') == 'true') {
         console.log('Bazaar prices from cache');
         let data = localStorage.getItem('hypixel-bazaar-data');
         BAZAAR_PRICES = JSON.parse(data);
-        loading.setAttribute('hidden', true);
-        form.removeAttribute('hidden');
-        for (let i = 1; i <= MAX_MINION_SLOTS; i++)
-            MinionSlot.fromLocalStorage(i);
-        return;
+    } else {
+        let resp = await fetch('/get-bazaar-prices');
+        let json = await resp.json();
+        let products = json.products;
+        let objs = Object.values(products).map(v => { return { 'id': v['product_id'], 'sell_price': v['quick_status']['sellPrice'] } });
+        for (let obj of objs) {
+            BAZAAR_PRICES[obj.id] = obj.sell_price;
+        }
+        console.log("Fetched Bazaar prices. Caching prices.");
+        setCookie('hypixel-fetched', 'true', { 'max-age': 15 * 60 });
+        localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
     }
-
-    let resp = await fetch('/get-bazaar-prices');
-    let json = await resp.json();
-    let products = json.products;
-    let objs = Object.values(products).map(v => { return { 'id': v['product_id'], 'sell_price': v['quick_status']['sellPrice'] } });
-    for (let obj of objs) {
-        BAZAAR_PRICES[obj.id] = obj.sell_price;
-    }
-    console.log("Fetched Bazaar prices. Caching prices.");
-    setCookie('hypixel-fetched', 'true', { 'max-age': 15 * 60 });
-    localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
 
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
