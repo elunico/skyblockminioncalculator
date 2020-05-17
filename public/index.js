@@ -1,12 +1,12 @@
 const STATUS_YELLOW = 'rgb(255, 191, 0)';
 const STATUS_RED = 'red';
 
-const fuelDropdown = new DropDown('fuel');
-const upgrade1Dropdown = new DropDown('upgrade1');
-const upgrade2Dropdown = new DropDown('upgrade2');
-const minionTypeDropdown = new DropDown('type-select');
-const sellToDropdown = new DropDown('sell-place-preference');
-const levelDropdown = new DropDown('level-select');
+const fuelDropdown = new Dropdown('fuel');
+const upgrade1Dropdown = new Dropdown('upgrade1');
+const upgrade2Dropdown = new Dropdown('upgrade2');
+const minionTypeDropdown = new Dropdown('type-select');
+const sellToDropdown = new Dropdown('sell-place-preference');
+const levelDropdown = new Dropdown('level-select');
 
 const addButton = document.getElementById('add-minion-button');
 const add24Button = document.getElementById('add-24-minion-button');
@@ -105,13 +105,13 @@ function showStatus(status, color, timeoutSeconds) {
 }
 
 function addMinionFromForm() {
-    let name = minionTypeDropdown.getSelectedItem();
-    let level = levelDropdown.getSelectedItem();
-    let fuel = fuelDropdown.getSelectedItem();
-    let upgrade1 = upgrade1Dropdown.getSelectedItem();
-    let upgrade2 = upgrade2Dropdown.getSelectedItem();
+    let name = minionTypeDropdown.selectedItem;
+    let level = levelDropdown.selectedItem;
+    let fuel = fuelDropdown.selectedItem;
+    let upgrade1 = upgrade1Dropdown.selectedItem;
+    let upgrade2 = upgrade2Dropdown.selectedItem;
     let additionalBonusPercentage = document.getElementById('additional-bonus').value || 0;
-    let sellPref = sellToDropdown.getSelectedItem();
+    let sellPref = sellToDropdown.selectedItem;
     additionalBonusPercentage /= 100; // divide extra percentage to get fractional value
     if (name == 'none' && level == 'none') {
         showStatus("You must specify a minion type and a level.");

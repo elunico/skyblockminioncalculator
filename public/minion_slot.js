@@ -291,13 +291,13 @@ class MinionSlot {
     }
 
     editMinion() {
-        minionTypeDropdown.selectItem(this.name);
-        levelDropdown.selectItem(this.level);
-        fuelDropdown.selectItem(this.fuel);
-        upgrade1Dropdown.selectItem(this.upgrade1);
-        upgrade2Dropdown.selectItem(this.upgrade2);
+        minionTypeDropdown.selectedItem = this.name;
+        levelDropdown.selectedItem = this.level;
+        fuelDropdown.selectedItem = this.fuel;
+        upgrade1Dropdown.selectedItem = this.upgrade1;
+        upgrade2Dropdown.selectedItem = this.upgrade2;
         document.getElementById('additional-bonus').value = this.additionalBonusPercentage * 100; // back to a percent for the form
-        sellToDropdown.selectItem(this.sellPreference);
+        sellToDropdown.selectedItem = this.sellPreference;
 
         MinionSlot.removeMinion(this.id);
     }
