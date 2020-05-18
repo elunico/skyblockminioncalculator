@@ -90,10 +90,6 @@ let timeout = null;
 function showStatus(status, color, timeoutSeconds) {
     color = color || 'red';
     timeoutSeconds = timeoutSeconds || 6;
-    console.trace(`Showing status: ${status}`);
-    // if (timeout) {
-    //     clearTimeout(timeout);
-    // }
     let elt = document.getElementById('add-status');
 
     let statusElt = document.createElement('div');
