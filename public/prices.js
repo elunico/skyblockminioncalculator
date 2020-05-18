@@ -47,8 +47,8 @@ let BAZAAR_PRICES = {};
 
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
-    for (let i = 1; i <= MAX_MINION_SLOTS; i++)
-        MinionSlot.fromLocalStorage(i);
+
+    loadLocalData();
 })();
 
 

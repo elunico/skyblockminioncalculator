@@ -359,6 +359,7 @@ class MinionSlot {
 
     toShareableJSONString() {
         const data = {};
+        data.id = this.id;
         data.name = this.name;
         data.level = this.level;
         data.fuel = this.fuel;

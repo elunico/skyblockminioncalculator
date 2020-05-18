@@ -134,18 +134,16 @@ function shareConfiguration() {
 
 }
 
-window.onload = () => {
+function loadLocalData() {
     let params = new URLSearchParams(window.location.search);
     let config = params.get('config');
 
     if (config) {
         let json = atob(config);
-        console.log(json);
         let register = JSON.parse(json);
-        console.log(register);
         for (let i = 0; i < MAX_MINION_SLOTS; i++) {
             if (!(Object.keys(register[i]).length === 0 && register[i].constructor === Object)) {
-                let obj = new MinionSlot(undefined, undefined, undefined, undefined, undefined, undefined, undefined, i);
+                let obj = new MinionSlot(undefined, undefined, undefined, undefined, undefined, undefined, undefined, register[i].id);
                 obj.name = register[i].name;
                 obj.level = register[i].level;
                 obj.fuel = register[i].fuel;
@@ -154,18 +152,18 @@ window.onload = () => {
                 obj.additionalBonusPercentage = register[i].additionalBonusPercentage;
                 obj.occupied = register[i].occupied;
                 obj.sellPreference = register[i].sellPreference;
-                console.log(obj);
                 obj.updatePrices();
                 obj.render();
-                SLOT_REGISTER[i] = obj;
+                SLOT_REGISTER[obj.id] = obj;
                 MinionSlot.incrementMinionCount();
             }
         }
     } else {
-        // this should trigger when Bazaar prices are loaded
-        // otherwise all prices will be from the NPC since 
-        // bazaar prices will be undefined
-        // for (let i = 1; i <= MAX_MINION_SLOTS; i++)
-        //     MinionSlot.fromLocalStorage(i);
+        for (let i = 1; i <= MAX_MINION_SLOTS; i++)
+            MinionSlot.fromLocalStorage(i);
     }
+}
+
+window.onload = () => {
+
 };
