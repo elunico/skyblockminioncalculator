@@ -38,8 +38,12 @@ let BAZAAR_PRICES = {};
         localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
 
     }
-    let updated = new Date(BAZAAR_PRICES.meta.lastUpdated);
-    bazaarFetched.textContent = updated.toLocaleString();
+    if (BAZAAR_PRICES.meta && BAZAAR_PRICES.meta.lastUpdated) {
+        let updated = new Date(BAZAAR_PRICES.meta.lastUpdated);
+        bazaarFetched.textContent = updated.toLocaleString();
+    } else {
+        bazaarFetched.textContent = '<unknown> (trying clearing website data or waiting a little while)'
+    }
 
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
