@@ -107,6 +107,10 @@ td {
     width: 16%;
 }
 
+td.silent {
+    border: none;
+}
+
 .note {
     font-size: 0.95em;
 }

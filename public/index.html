@@ -59,9 +59,6 @@
                     action interval, and all other stats that are not bazaar prices cannot be fetched live
                     and were taken from <a href="https://hypixel-skyblock.fandom.com/">this Wiki</a>
                     and are static until updated.
-                    <br>
-                    <br>
-                    <b><i>Last Updated: Monday, May 11, 2020 at 12:23PM EDT</i></b>
                 </p>
                 <p>
                     Note 4: If you click "edit minion" the minion will be removed and the form will be changed to the
@@ -203,7 +200,31 @@
         <span id="slots">
         </span>
         </p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="silent">
+                        Bazaar Prices last updated at:
+                    </td>
+                    <td class="silent">
+                        <span class="minion-stat" id="bazaar-fetched"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="silent">
+                        NPC Prices last updated at:
+                    </td>
+                    <td class="silent">
+                        <span class="minion-stat" id="npc-updated">Monday, May 11, 2020 at 12:23PM EDT</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <script>
+            let d = new Date(1589214180000);
+            let e = document.getElementById('npc-updated');
+            e.textContent = d.toLocaleString();
+
             const slots = document.getElementById('slots');
             MinionSlot.setParentContainer(slots);
         </script>

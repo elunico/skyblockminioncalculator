@@ -17,6 +17,7 @@ let BAZAAR_PRICES = {};
 (async function () {
     let form = document.getElementById('minion-form');
     let loading = document.getElementById('form-loading');
+    let bazaarFetched = document.getElementById('bazaar-fetched');
 
     // local caching check
     if (getCookie('hypixel-fetched') == 'true') {
@@ -31,10 +32,14 @@ let BAZAAR_PRICES = {};
         for (let obj of objs) {
             BAZAAR_PRICES[obj.id] = obj.sell_price;
         }
+        BAZAAR_PRICES.meta = { lastUpdated: json.lastUpdated };
         console.log("Fetched Bazaar prices. Caching prices.");
-        setCookie('hypixel-fetched', 'true', { 'max-age': 15 * 60 });
+        setCookie('hypixel-fetched', 'true', { expires: new Date(Date.now() + (1000 * 60 * 15)).toUTCString() });
         localStorage.setItem('hypixel-bazaar-data', JSON.stringify(BAZAAR_PRICES));
+
     }
+    let updated = new Date(BAZAAR_PRICES.meta.lastUpdated);
+    bazaarFetched.textContent = updated.toLocaleString();
 
     loading.setAttribute('hidden', true);
     form.removeAttribute('hidden');
@@ -83,7 +88,8 @@ function getMinionDropCounts(minionSlot, seconds) {
 
     if (minionSlot.upgrade1 == 'flintshovel' || minionSlot.upgrade2 == 'flintshovel') {
         if (minionSlot.name != 'Gravel') {
-            showStatus(`Flint Shovel cannot be put into minion of type ${minionSlot.name}. It will be ignored`);
+            showStatus(`Flint Shovel cannot be put into minion of type ${minionSlot.name
+                }.It will be ignored`);
         } else {
             drops['FLINT'] += drops["GRAVEL"];
             delete drops['GRAVEL'];
@@ -92,7 +98,8 @@ function getMinionDropCounts(minionSlot, seconds) {
 
     if (minionSlot.upgrade1 == 'enchantedegg' || minionSlot.upgrade2 == 'enchantedegg') {
         if (minionSlot.name != 'Chicken') {
-            showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name}. It will be ignored`);
+            showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name
+                }.It will be ignored`);
         } else {
             drops['EGG'] = drops["RAW_CHICKEN"];
         }
