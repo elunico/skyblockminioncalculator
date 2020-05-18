@@ -120,6 +120,17 @@ td.silent {
 }
 
 .status {
+    position: fixed;
+    left: 1%;
+    bottom: 0.5%;
+    padding: 5px;
+}
+
+.status-element {
     font-family: var(--mono-font);
     font-size: 90%;
+    padding: 5px;
+    transition: all 250ms linear;
+    transform: translate(0px, 100px);
+    pointer-events: none;
 }

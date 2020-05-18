@@ -92,8 +92,8 @@ function getMinionDropCounts(minionSlot, seconds) {
 
     if (minionSlot.upgrade1 == 'flintshovel' || minionSlot.upgrade2 == 'flintshovel') {
         if (minionSlot.name != 'Gravel') {
-            showStatus(`Flint Shovel cannot be put into minion of type ${minionSlot.name
-                }.It will be ignored`);
+            // showStatus(`Flint Shovel cannot be put into minion of type ${minionSlot.name
+            //     }. It will be ignored`);
         } else {
             drops['FLINT'] += drops["GRAVEL"];
             delete drops['GRAVEL'];
@@ -102,16 +102,16 @@ function getMinionDropCounts(minionSlot, seconds) {
 
     if (minionSlot.upgrade1 == 'enchantedegg' || minionSlot.upgrade2 == 'enchantedegg') {
         if (minionSlot.name != 'Chicken') {
-            showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name
-                }.It will be ignored`);
+            //     showStatus(`Enchanted Egg cannot be put into minion of type ${minionSlot.name
+            //         }. It will be ignored`);
         } else {
             drops['EGG'] = drops["RAW_CHICKEN"];
+            // }
         }
-    }
 
+    }
     return drops;
 }
-
 /**
  * returns a sum of the amount earned by selling the given number (value) 
  * of each item ID (key) in dropCounts at the place preferred by the place argument 

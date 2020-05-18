@@ -87,6 +87,19 @@ class MinionSlot {
     }
 
     updatePrices() {
+        if (this.upgrade1 == 'diamondspreading' && this.upgrade2 == 'diamondspreading') {
+            showStatus('Using 2 Diamond Spreadings will give inaccurate results. Only 1 diamond spreading affects diamond drops.', STATUS_YELLOW)
+        }
+        if (this.upgrade1 == 'flintshovel' || this.upgrade2 == 'flintshovel') {
+            if (this.name != 'Gravel') {
+                showStatus(`Flint Shovel cannot be put into ${this.name} Minion. It will be ignored`)
+            }
+        }
+        if (this.upgrade1 == 'enchantedegg' || this.upgrade2 == 'enchantedegg') {
+            if (this.name != 'Chicken') {
+                showStatus(`Enchanted egg cannot be put into ${this.name} Minion. It will be ignored`)
+            }
+        }
         this.pricesPerItem = getDropItemPrices(Object.keys(getHourlyMinionDropCounts(this)), this.sellPreference);
     }
 
@@ -104,22 +117,38 @@ class MinionSlot {
         throw 'No More Minion Slots';
     }
 
-    static fromLocalStorage(id) {
+    static getLocalMinionData(id) {
         const str = localStorage.getItem(`minion-slot-${id}`);
-        if (!str) return;
+        if (!str) return null;
 
         const data = JSON.parse(str);
-        const obj = new MinionSlot();
+        const ret = {};
+        ret.name = data[`sl${id}-minion-name`];
+        ret.level = data[`sl${id}-level`];
+        ret.fuel = data[`sl${id}-fuel`];
+        ret.upgrade1 = data[`sl${id}-updrade1`];
+        ret.upgrade2 = data[`sl${id}-upgrade2`];
+        ret.additionalBonusPercentage = data[`sl${id}-additional-bonus`];
+        ret.sellPreference = data[`sl${id}-sell-to`];
+        return ret;
+    }
 
-        obj.name = data[`sl${id}-minion-name`];
-        obj.level = data[`sl${id}-level`];
-        obj.fuel = data[`sl${id}-fuel`];
-        obj.upgrade1 = data[`sl${id}-updrade1`];
-        obj.upgrade2 = data[`sl${id}-upgrade2`];
-        obj.additionalBonusPercentage = data[`sl${id}-additional-bonus`];
+
+    static fromLocalStorage(id) {
+        let data = MinionSlot.getLocalMinionData(id);
+        if (!data) return;
+
+        const obj = new MinionSlot(data.name, data.level, data.fuel, data.upgrade1, data.upgrade2, data.additionalBonusPercentage, data.sellPreference);
+
+        // obj.name = data[`sl${id}-minion-name`];
+        // obj.level = data[`sl${id}-level`];
+        // obj.fuel = data[`sl${id}-fuel`];
+        // obj.upgrade1 = data[`sl${id}-updrade1`];
+        // obj.upgrade2 = data[`sl${id}-upgrade2`];
+        // obj.additionalBonusPercentage = data[`sl${id}-additional-bonus`];
         obj.occupied = true;
-        obj.sellPreference = data[`sl${id}-sell-to`];
-        obj.updatePrices();
+        // obj.sellPreference = data[`sl${id}-sell-to`];
+        // obj.updatePrices();
         obj.render();
     }
 
@@ -127,7 +156,7 @@ class MinionSlot {
         MinionSlot.minionSlotContainer = elt;
     }
 
-    buildHTMLForSlot(parentElt) {
+    buildHTMLForSlot(parentElt, showSaveButton) {
         this._htmlExists = true;
 
         let table = document.createElement('table');
@@ -150,7 +179,7 @@ class MinionSlot {
         tr1.appendChild(fieldSpan);
 
         contDiv = document.createElement('td');
-        contDiv.className = 'minion-cell'
+        contDiv.className = 'minion-cell';
         contDiv.textContent = 'Action interval: ';
         fieldSpan = document.createElement('td');
         fieldSpan.id = `sl${this.id}-action-int`;
@@ -250,6 +279,23 @@ class MinionSlot {
         editButton.value = 'Edit Minion';
         editButton.onclick = () => this.editMinion();
 
+        let saveLocallyButton = document.createElement('input');
+        saveLocallyButton.type = 'button';
+        saveLocallyButton.value = 'Save Locally';
+        saveLocallyButton.onclick = () => {
+            let existingMinion = MinionSlot.getLocalMinionData(this.id);
+            if (existingMinion != null) {
+                let confirmed = confirm(`This will overwrite ${existingMinion.name}. Continue?`);
+                if (confirmed) {
+                    this.toLocalStorage()
+                    showStatus('Saved!')
+                }
+            } else {
+                this.toLocalStorage();
+                showStatus('Saved!');
+            }
+        };
+
         table.appendChild(tbody);
         tbody.appendChild(tr1);
         tbody.appendChild(tr2);
@@ -259,6 +305,8 @@ class MinionSlot {
 
         p.appendChild(editButton);
         p.appendChild(removeButton);
+        if (showSaveButton)
+            p.appendChild(saveLocallyButton);
         parentElt.appendChild(p);
     }
 
@@ -321,9 +369,9 @@ class MinionSlot {
         return s;
     }
 
-    render() {
+    render(showSaveButton) {
         if (!this._htmlExists)
-            this.buildHTMLForSlot(MinionSlot.minionSlotContainer);
+            this.buildHTMLForSlot(MinionSlot.minionSlotContainer, showSaveButton);
 
         const formatter = Intl.NumberFormat('en-US');
         document.getElementById(`sl${this.id}-minion-name`).innerHTML = `${this.name} ${this.level}`

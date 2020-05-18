@@ -89,17 +89,29 @@ let timeout = null;
 
 function showStatus(status, color, timeoutSeconds) {
     color = color || 'red';
-    timeoutSeconds = timeoutSeconds || 10;
-    if (timeout) {
-        clearTimeout(timeout);
-    }
+    timeoutSeconds = timeoutSeconds || 6;
+    console.trace(`Showing status: ${status}`);
+    // if (timeout) {
+    //     clearTimeout(timeout);
+    // }
     let elt = document.getElementById('add-status');
-    elt.style.color = color;
-    elt.textContent = status;
+
+    let statusElt = document.createElement('div');
+    setTimeout(() => statusElt.style.transform = 'translate(0px, 0px)', 0);
+    statusElt.style.color = color;
+    statusElt.classList.add('status-element')
+    statusElt.style['background-color'] = 'var(--background-color)';
+    statusElt.textContent = status;
     timeout = setTimeout(() => {
-        elt.textContent = '';
+        // statusElt.textContent = '';
+        // statusElt.style['background-color'] = '';
+        statusElt.style.transform = 'translate(0px, 100px)';
+        setTimeout(() => {
+            elt.removeChild(statusElt);
+        }, 250);
         timeout = null;
     }, 1000 * timeoutSeconds);
+    elt.appendChild(statusElt);
     return;
 
 }
@@ -125,39 +137,89 @@ function addMinionFromForm() {
 }
 
 function shareConfiguration() {
-    let json = '[' + Object.values(SLOT_REGISTER).map(v => v === null ? "{}" : v.toShareableJSONString()).join(",") + ']';
-    let data = btoa(json);
+    /*
+        old means of sharing. just put every thing into a json array b64 it and 
+        call it config
 
+        I will still support decoding these urls via the presence of the config parameter
+        but new share links will not use this format
+        *********************************************
+        let json = '[' + Object.values(SLOT_REGISTER).map(v => v === null ? "{}" : v.toShareableJSONString()).join(",") + ']';
+        let data = btoa(json);
+        
+        let shareArea = document.getElementById('shareArea');
+        let url = `https://skyblock-minion-calculator.herokuapp.com/?config=${data}`;
+        shareArea.innerHTML = `<a href="${url}">${url}</a>`;
+    */
+
+    /*
+        new system involves one query parameter per slot only if it exists
+        So if you share one minion slot the url will have only sl1=<b64 data>
+        and it also includes a count so that if 0 are shared there is still 
+        something to check in the url 
+    */
+    let qs = '?';
+    let count = 0;
+    let n = 1;
+    for (let slot of Object.values(SLOT_REGISTER)) {
+        if (slot) {
+            count++;
+            qs += `s${n}=${btoa(slot.toShareableJSONString())}&`;
+        }
+        n++;
+    }
+    qs += `count=${count}`
     let shareArea = document.getElementById('shareArea');
-    let url = `https://skyblock-minion-calculator.herokuapp.com/?config=${data}`;
+    let url = `https://skyblock-minion-calculator.herokuapp.com/${qs}`;
     shareArea.innerHTML = `<a href="${url}">${url}</a>`;
 
+}
+
+function objectToSlot(data) {
+    let obj = new MinionSlot(undefined, undefined, undefined, undefined, undefined, undefined, undefined, data.id);
+    obj.name = data.name;
+    obj.level = data.level;
+    obj.fuel = data.fuel;
+    obj.upgrade1 = data.upgrade1;
+    obj.upgrade2 = data.upgrade2;
+    obj.additionalBonusPercentage = data.additionalBonusPercentage;
+    obj.occupied = data.occupied;
+    obj.sellPreference = data.sellPreference;
+    obj.updatePrices();
+    SLOT_REGISTER[obj.id] = obj;
+    MinionSlot.incrementMinionCount();
+    return obj;
 }
 
 function loadLocalData() {
     let params = new URLSearchParams(window.location.search);
     let config = params.get('config');
+    let hasSlots = params.get('count');
+
 
     if (config) {
+        // old sharing url format
         let json = atob(config);
         let register = JSON.parse(json);
         for (let i = 0; i < MAX_MINION_SLOTS; i++) {
             if (!(Object.keys(register[i]).length === 0 && register[i].constructor === Object)) {
-                let obj = new MinionSlot(undefined, undefined, undefined, undefined, undefined, undefined, undefined, register[i].id);
-                obj.name = register[i].name;
-                obj.level = register[i].level;
-                obj.fuel = register[i].fuel;
-                obj.upgrade1 = register[i].upgrade1;
-                obj.upgrade2 = register[i].upgrade2;
-                obj.additionalBonusPercentage = register[i].additionalBonusPercentage;
-                obj.occupied = register[i].occupied;
-                obj.sellPreference = register[i].sellPreference;
-                obj.updatePrices();
-                obj.render();
-                SLOT_REGISTER[obj.id] = obj;
-                MinionSlot.incrementMinionCount();
+                let o = objectToSlot(register[i]);
+                o.render(true);
+
             }
         }
+    } else if (hasSlots) {
+        // new sharing url format 
+        for (let slot = 1; slot <= 24; slot++) {
+            let b64 = params.get(`s${slot}`);
+            if (b64) {
+                let jsonString = atob(b64);
+                let obj = JSON.parse(jsonString);
+                let o = objectToSlot(obj);
+                o.render(true);
+            }
+        }
+
     } else {
         for (let i = 1; i <= MAX_MINION_SLOTS; i++)
             MinionSlot.fromLocalStorage(i);
