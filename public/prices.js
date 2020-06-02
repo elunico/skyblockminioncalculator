@@ -13,11 +13,16 @@ const SELL_PREFERENCE = {
 let BAZAAR_PRICES = {};
 
 // retrieve bazaar prices locally or from server
-// then show the add minion form when prices are ready 
+// then show the add minion form when prices are ready
 (async function () {
     let form = document.getElementById('minion-form');
     let loading = document.getElementById('form-loading');
     let bazaarFetched = document.getElementById('bazaar-fetched');
+
+    let loadTimeout = setTimeout(() => {
+        let bugReport = document.getElementById('bug-report');
+        bugReport.removeAttribute('hidden');
+    }, 4000);
 
     // local caching check
     if (getCookie('hypixel-fetched') == 'true') {
@@ -28,6 +33,7 @@ let BAZAAR_PRICES = {};
         let resp = await fetch('/get-bazaar-prices');
         let json = await resp.json();
         let products = json.products;
+        console.log(json);
         let objs = Object.values(products).map(v => { return { 'id': v['product_id'], 'sell_price': v['quick_status']['sellPrice'] } });
         for (let obj of objs) {
             BAZAAR_PRICES[obj.id] = obj.sell_price;
@@ -44,11 +50,14 @@ let BAZAAR_PRICES = {};
     } else {
         bazaarFetched.textContent = '<unknown> (trying clearing website data or waiting a little while)'
     }
-
-    loading.setAttribute('hidden', true);
-    form.removeAttribute('hidden');
-
-    loadLocalData();
+    if (BAZAAR_PRICES) {
+        loading.setAttribute('hidden', true);
+        form.removeAttribute('hidden');
+        let bugReport = document.getElementById('bug-report');
+        bugReport.setAttribute('hidden', true);
+        clearTimeout(loadTimeout);
+        loadLocalData();
+    }
 })();
 
 
@@ -57,7 +66,7 @@ function getHourlyMinionDropCounts(minionSlot) {
 }
 
 /**
- * Calculates the number of each type of drop the minion in the 
+ * Calculates the number of each type of drop the minion in the
  * MinionSlot will drop over seconds seconds
  * @returns {object} Item IDs of the minion's drops to the amount dropped
  * @param {MinionSlot} minionSlot The minion slot whose drops we want to know
@@ -67,7 +76,7 @@ function getMinionDropCounts(minionSlot, seconds) {
     let actionInterval = MINION_LEVEL_STATS[minionSlot.name][minionSlot.level].cooldown;
     let speed = calculateNewSpeed(actionInterval, minionSlot.fuel, minionSlot.upgrade1, minionSlot.upgrade2, minionSlot.additionalBonusPercentage);
     let count = seconds / speed;
-    // count is # of actions. Every other action results in a yield 
+    // count is # of actions. Every other action results in a yield
     count = count / 2;
     let drops = {};
     let dropsPerAction = MINIONS[minionSlot.name].count;
@@ -80,7 +89,7 @@ function getMinionDropCounts(minionSlot, seconds) {
     // diamond spreading gives 1 diamond per 10 *harvested items*
     // need to divide out drops per harvest since dropping 4 snow balls counts as 1 harvest
     // then divide by every 10 *harvests* (normally 20 actions)
-    // but remember we already divided by 2 to remove each time an 
+    // but remember we already divided by 2 to remove each time an
     // action results in a spawn and not a harvest so we just divide by 10
     if (minionSlot.upgrade1 == 'diamondspreading' || minionSlot.upgrade2 == 'diamondspreading') {
         if (drops['DIAMOND']) {
@@ -113,9 +122,9 @@ function getMinionDropCounts(minionSlot, seconds) {
     return drops;
 }
 /**
- * returns a sum of the amount earned by selling the given number (value) 
- * of each item ID (key) in dropCounts at the place preferred by the place argument 
- * 
+ * returns a sum of the amount earned by selling the given number (value)
+ * of each item ID (key) in dropCounts at the place preferred by the place argument
+ *
  * @param {object} dropCounts an object listing the number of drops for each Item ID (can be obtained from getTotalMinionDropsCount)
  * @param {string} place preferred place to sell drops
  */
@@ -129,15 +138,15 @@ function getTotalDropsValue(dropCounts, place) {
 
 
 /**
- * Returns a object containing item IDs to their 
+ * Returns a object containing item IDs to their
  * unit prices from the place according to preference.
- * 
+ *
  * Essentially, given a list of items, it iterates
  * getItemPrice on them
- * 
- * @param {*} drops A list of item ids that the minion drops 
+ *
+ * @param {*} drops A list of item ids that the minion drops
  * @param {*} preference The preference for where to sell items. See the SELL_PREFERENCE object for legal options
- * 
+ *
  */
 function getDropItemPrices(drops, preference) {
     let prices = {};
@@ -148,15 +157,15 @@ function getDropItemPrices(drops, preference) {
 }
 
 /**
- * This function returns the price that the item with id can be 
+ * This function returns the price that the item with id can be
  * sold for based on the place preference. This function is
  * recommended over indexing directly into NPC_SELL_PRICES or BAZAAR_PRICES
- * because it will 1) select the higher price between the two 
- * if SELL_PREFERENCE.BEST_PRICE is passed and 2) will fall back 
- * to selling to NPC if the Bazaar does not except the item such as with 
- * eggs. Therefore, it requires must less logic and checking to just 
+ * because it will 1) select the higher price between the two
+ * if SELL_PREFERENCE.BEST_PRICE is passed and 2) will fall back
+ * to selling to NPC if the Bazaar does not except the item such as with
+ * eggs. Therefore, it requires must less logic and checking to just
  * use this function than to use the lookup tables themselves.
- * 
+ *
  * @param {string} id The id of the drop as given in minion_types.js
  * @param {string} place from SELL_PREFERENCE
  */

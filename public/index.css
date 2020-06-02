@@ -59,6 +59,11 @@ a:visited {
     color: var(--link-visited-color);
 }
 
+.uh-oh {
+    font-size: 120%;
+    color: red;
+}
+
 .small {
     font-size: 80%;
 }
