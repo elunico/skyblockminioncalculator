@@ -17,7 +17,7 @@ let cachedPrices = null;
 
 app.use((req, res, next) => {
     let now = (new Date(Date.now()));
-    console.log(`Incoming ${req.method} request for "${req.url}" on ${
+    console.log(`Incoming ${req.method} request for "${req.url}" from ${req.headers['x-forwarded-for'] || req.connection.remoteAddress} on ${
         now.toLocaleDateString()} at ${now.toLocaleTimeString()}`);
     next();
 })

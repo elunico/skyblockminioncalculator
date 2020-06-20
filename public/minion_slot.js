@@ -419,6 +419,6 @@ class MinionSlot {
     }
 }
 
-// static fields are not yet supported 
+// static fields are not yet supported
 MinionSlot.totalSlots = 0;
 MinionSlot.minionSlotContainer = null;
