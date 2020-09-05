@@ -23,6 +23,10 @@ app.use((req, res, next) => {
 })
 app.use(limiter);
 app.use(express.static('public'));
+app.use((req, res, next) => {
+    res.removeHeader('X-Powered-By');
+    next();
+});
 
 app.get('/get-bazaar-prices', (req, res) => {
     if ((!cachedPrices) || ((Date.now() - lastFetch) > needFetchDifference)) {
